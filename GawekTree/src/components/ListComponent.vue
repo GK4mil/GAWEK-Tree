@@ -32,22 +32,19 @@ export default {
             
             this.showFullTree=!this.showFullTree;
         },
-        solve: async function(id:any){
-            console.log("to solve");
-           console.log(id);
-            var res =this.findRecuParent(id,[this.treeData]);
-            console.log("res");
-            console.log(res);
+        solve: async function(id:any):Promise<any>{
+  
+            var res =treeService.findRecuParent(id,[this.treeData]);
             if(res!==null)
             {
                 res.children=[];
 
-                var children = await this.grabChildren(id)
+                var children = await treeService.grabChildren(id)
                 if(children!=null)
                 {
                     for(var i in children )
                     {
-                        if(!this.checkIfExistsInArray(res.children,children[i].guid))
+                        if(!treeService.checkIfExistsInArray(res.children,children[i].guid))
                             res.children.push({name:children[i].name, guid:children[i].guid, parentGuid: children[i].parentGuid, children: [] });
                     }
                 }
@@ -56,87 +53,10 @@ export default {
             }
                 
         },
-        checkIfExistsInArray:function (array: [], guid:any)
-        {
-            for(var i in array)
-            {
-                //console.log(array[i]);
-                
-                if(array[i].guid===guid)
-                {
-                    return true;
-                }
-            }
-            return false;
-  
-        },
+       
         
-        grabChildren: async function(parentGuid:any){
-            
-
-            return await fetch("https://localhost:5001/api/Tree/child/"+parentGuid)
-                .then(async response => {
-                    const data = await response.json();
-                    if (!response.ok) {
-                            const error = (data && data.message) || response.statusText;
-                            return Promise.reject(error);
-                    }
-                    return data;
-                 })
-                .catch(() => {
-                    return null;
-                 });
-
-        },
-        update: function(){
-                console.log("up");
-                this.treeData.children.push({name:"updated"});
-        },
-        findRecuParent(guid:any, list :any):[]
-        {
-            console.log("recu");
-            console.log(list);
-            
-            
-            for(var i in list)
-            { 
-                console.log("reculoop");
-               console.log(guid);
-               console.log(list[i].guid);
-               console.log(list[i].children.length);
-                if(list[i].guid==guid)
-                {
-                    console.log("found");
-                    console.log(list[i].guid);
-                    return list[i];
-                }
-                else if(list[i].children.length>0)
-                {
-                    var result= this.findRecuParent(guid,list[i].children);
-                    if(result==null)
-                        continue;
-                    else
-                        return result;
-                }
-                    
-
-               
-            }
-            return null;
-            
-            /*list.children.forEach((obj)=>{
-                obj2=obj;
-                if(obj.guid===guid)
-                {
-                    
-                    return obj;
-                }
-                this.findRecuParent(guid,obj2);
-            })*/
-            
-         
-        }
-
+        
+        
     }
 }
 </script>

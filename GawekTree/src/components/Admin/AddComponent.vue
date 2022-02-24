@@ -33,7 +33,7 @@ export default {
         return;
       }
 
-      const requestOptions = {
+      const requestOptions:any = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

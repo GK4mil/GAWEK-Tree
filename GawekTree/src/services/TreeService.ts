@@ -32,7 +32,7 @@ class TreeService {
             });
 
     }
-    findRecuParent(guid: any, list: any): [] {
+    findRecuParent(guid: any, list: any): TreeNode {
         
         for (const i in list) {
            
@@ -48,11 +48,11 @@ class TreeService {
                     return result;
             }
         }
-        return [];
+        return {name:"", guid:"", children:[], parentGuid:""};
 
     }
 
-    checkIfExistsInArray(array: [], guid: any) {
+    checkIfExistsInArray(array: TreeNode[], guid: any) {
         for (const i in array) {
             if (array[i].guid === guid) {
                 return true;
@@ -62,28 +62,26 @@ class TreeService {
 
     }
 
-    async skeleton() {
-        const treeData =
+    async skeleton():Promise<TreeNode> {
+        const treeData:TreeNode =
         {
             name: "root",
             guid: "00000000-0000-0000-0000-000000000000",
             parentGuid: "00000000-0000-0000-0000-000000000000",
-            children: [],
+            children: []
         };
 
         const response = await fetch("https://localhost:5001/api/Tree/Root");
         const mapped = await response.json();
         for (const i in mapped) {
-            treeData.children.push({
-                name: mapped[i].name,
+            treeData.children.push({name: mapped[i].name,
                 guid: mapped[i].guid,
                 parentGuid: mapped[i].parentGuid,
-                children: [],
-            });
-
-            return treeData;
+                children: [],});
+      
         }
-
+        return treeData;
+        
     }
 
     async getNumberOfChildren(id:any)

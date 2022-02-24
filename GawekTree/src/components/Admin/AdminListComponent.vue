@@ -41,11 +41,11 @@ export default {
     AddComponent,
     EditComponent,
   },
-  treeData: [],
+  treeData: undefined,
   showAddForm: false,
   showEditForm: false,
   showFullTree: false,
-  parent: Object,
+  parent: [],
   data() {
     return {
       treeData: [],
