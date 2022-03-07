@@ -77,6 +77,7 @@ namespace gawektree_back.Controllers
 
             if (record.name.Length == 0)
                 return BadRequest(new { message = "No name provided!" });
+           
             
 
             if ((await ts.RecordExists(record.parentGuid)))
@@ -109,8 +110,10 @@ namespace gawektree_back.Controllers
                 return BadRequest(new { message = "Parent and child can not have the same ID" });
             else if (record.name.Length == 0)
                 return BadRequest(new { message = "Empty name field" });
-            else if(ts.checkIfIsRoot(fromDatabase))
+            else if (ts.checkIfIsRoot(fromDatabase))
                 return BadRequest(new { message = "Cannot change root" });
+            else if (await ts.CheckIfNextParentIsChild(record.parentGuid, id))
+                return BadRequest(new { message = "Cannot move parent to child node" });
 
             else if (fromDatabase != null)
             {

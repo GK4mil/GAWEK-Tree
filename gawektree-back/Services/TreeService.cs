@@ -13,6 +13,22 @@ namespace gawektree_back.Services
             this.rr = serviceProvider.CreateScope().ServiceProvider.GetRequiredService<IRecordRepository>();
         }
 
+        public async Task<bool> CheckIfNextParentIsChild(Guid nextParent, Guid id)
+        {
+            var Parent = await rr.GetByIdAsync(nextParent); 
+            if (Parent != null)
+            {
+                if (Parent.parentGuid != id && Parent.guid != Guid.Empty)
+                    return await CheckIfNextParentIsChild(Parent.parentGuid, id);
+                else if (Parent.guid == Guid.Empty)
+                    return false;
+                else 
+                    return true;
+
+            }
+            else
+                return false;
+        }
 
         public async Task<bool> CheckIfNameExistsAmongSiblings(Guid parentGuid, string name)
         {
@@ -21,7 +37,7 @@ namespace gawektree_back.Services
             {
                 foreach (Record record in list)
                 {
-                    if (record.name.ToLowerInvariant().Trim() == name.ToLowerInvariant().Trim())
+                    if (record?.name?.ToLowerInvariant().Trim() == name.ToLowerInvariant().Trim())
                         return true;
                 }
                 return false;

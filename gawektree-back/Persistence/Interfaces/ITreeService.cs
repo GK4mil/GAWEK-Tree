@@ -9,5 +9,6 @@ namespace gawektree_back.Persistence.Interfaces
 
         public Task DeleteAllChildRecursively(Guid id);
         public bool checkIfIsRoot(Record record);
+        public Task<bool> CheckIfNextParentIsChild(Guid nextParent, Guid id);
     }
 }
